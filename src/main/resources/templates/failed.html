@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Failed!</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #264653;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: white;
+        }
+
+        .container {
+            text-align: center;
+            width: 80%;
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.4rem;
+            color: #e76f51;
+            margin: 0.5rem auto;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: #F4A261;
+            margin: 0.5rem auto;
+        }
+
+        .retry-button {
+            background-color: #2a9d8f;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .retry-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Almost There!</h1>
+    <h2 th:text="'Don\'t worry, ' + ${username} + ', you can try again!'"></h2>
+    <button class="retry-button" onclick="window.location.href='/start'">Try Again</button>
+</div>
+</body>
+</html>

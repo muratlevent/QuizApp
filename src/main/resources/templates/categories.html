@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz Game - Category Selection</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #264653;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            text-align: center;
+            width: 80%;
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            font-size: 2.4rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .categories-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-gap: 20px;
+            margin-bottom: 2rem;
+        }
+
+        .category-button {
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            font-size: 1.5rem;
+            width: 100%;
+            height: 75px;
+        }
+
+        .category-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .categories-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Select Category</h2>
+    <div class="categories-container">
+        <form th:action="@{/selectCategory}" method="post">
+            <input type="hidden" name="category" value="science">
+            <button type="submit" class="category-button" style="background-color: #2a9d8f;">Science</button>
+        </form>
+        <form th:action="@{/selectCategory}" method="post">
+            <input type="hidden" name="category" value="art">
+            <button type="submit" class="category-button" style="background-color: #e9c46a;">Art</button>
+        </form>
+        <form th:action="@{/selectCategory}" method="post">
+            <input type="hidden" name="category" value="history">
+            <button type="submit" class="category-button" style="background-color: #f4a261;">History</button>
+        </form>
+        <form th:action="@{/selectCategory}" method="post">
+            <input type="hidden" name="category" value="geography">
+            <button type="submit" class="category-button" style="background-color: #e76f51;">Geography</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>
