@@ -19,35 +19,52 @@
 
         .container {
             text-align: center;
-            width: 100%;
-            max-width: 400px;
-            padding: 20px;
-            border-radius: 10px;
+            background: white;
+            width: 350px;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            color: black;
         }
 
-        .form-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        h2 {
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-bottom: 20px;
+            color: grey;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            font-size: 1rem;
+            box-sizing: border-box;
         }
 
         .button {
             padding: 15px;
             border-radius: 5px;
             border: none;
-            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            font-size: 1rem;
-            width: calc(50% - 10px);
-            margin: 5px;
             background-color: #2a9d8f;
-            color: black;
-            text-decoration: none;
+            color: white;
+            font-size: 1rem;
+            width: 100%;
+            margin: 10px 0;
+            cursor: pointer;
         }
 
         .button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            background-color: #23867a;
         }
 
         .button:active {
@@ -55,26 +72,17 @@
             box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
         }
 
-        .input-group {
-            margin-bottom: 20px;
-            background: #F4A261;
-            border-radius: 10px;
-            overflow: hidden;
+        .register {
+            color: #b3b3b3;
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: block;
+            margin-top: 20px;
         }
 
-        .input-group input {
-            width: calc(100% - 40px);
-            border: none;
-            padding: 20px;
-            font-size: 1.5rem;
-            color: white;
-            background: transparent;
-            text-align: center;
-        }
-
-        ::placeholder {
-            opacity: 1;
-            text-align: center;
+        .register a {
+            color: #2a9d8f;
+            text-decoration: none;
         }
 
         @media (max-width: 768px) {
@@ -86,25 +94,23 @@
 </head>
 <body>
 <div class="container">
-    <div class="form-container">
-        <form th:action="@{/login}" method="post">
-            <div th:if="${param.error}">
-                Invalid username or password.
-            </div>
-            <div class="input-group">
-                <label for="username"></label><input type="text" id="username" name="username"
-                                                     placeholder="Enter your username" required>
-            </div>
-            <div class="input-group">
-                <label for="password"></label><input type="password" id="password" name="password"
-                                                     placeholder="Enter your password" required>
-            </div>
-            <div>
-                <button type="submit" class="button">Login</button>
-                <button class="button" onclick="window.location.href='/register'">Register</button>
-            </div>
-        </form>
-    </div>
+    <h2>LOGIN</h2>
+    <p>Please enter your credentials to login</p>
+    <form th:action="@{/login}" method="post">
+        <div th:if="${param.error}">
+            Invalid username or password
+        </div>
+        <div class="input-group">
+            <label for="username"></label><input type="text" id="username" name="username"
+                                                 placeholder="username" required>
+        </div>
+        <div class="input-group">
+            <label for="password"></label><input type="password" id="password" name="password"
+                                                 placeholder="password" required>
+        </div>
+        <button type="submit" class="button">LOGIN</button>
+        <p class="register">Not registered? <a href="/register">Create an account</a></p>
+    </form>
 </div>
 </body>
 </html>

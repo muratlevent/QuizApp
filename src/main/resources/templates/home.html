@@ -1,88 +1,103 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>Home</title>
-  <style>
-    body {
-        font-family: 'Arial', sans-serif;
-        background-color: #264653;
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-        color: white;
-    }
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #264653;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: black;
+        }
 
-    .container {
-        text-align: center;
-        width: 80%;
-        max-width: 960px;
-        margin: 0 auto;
-    }
-
-    h2 {
-        font-size: 2.4rem;
-        margin-bottom: 1rem;
-    }
-
-    .buttons {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-}
-
-.button {
-    flex: 1;
-    padding: 20px;
-    border-radius: 10px;
-    border: none;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-    font-size: 1.5rem;
-    height: 75px;
-    background-color: #2a9d8f;
-    color: black;
-    text-decoration: none;
-    text-align: center;
-}
-
-.button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-}
-
-.button:active {
-    transform: scale(0.98);
-    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
-}
-
-.register-button {
-    background-color: #F4A261;
-}
-
-
-    @media (max-width: 768px) {
         .container {
-            width: 90%;
+            text-align: center;
+            width: 40%;
+            max-width: 960px;
+            padding: 200px;
+            border-radius: 8px;
+            background: #ffffff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: auto;
+        }
+
+        h2 {
+            font-size: 2.4rem;
+            margin-bottom: 0.5em;
+        }
+
+        p {
+            margin-bottom: 2em;
+            color: #b3b3b3;
+            font-size: 1.2rem;
         }
 
         .buttons {
-            flex-direction: column;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
         }
-    }
-  </style>
+
+        .button, .register-button {
+            padding: 15px;
+            border-radius: 5px;
+            border: none;
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            font-size: 1.5rem;
+            width: 150px;
+            height: 75px;
+            margin: 0;
+            text-decoration: none;
+            color: white;
+            background-color: #2a9d8f;
+        }
+
+        .register-button {
+            background-color: #F4A261;
+        }
+
+        .button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .button:active, .register-button:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                width: 90%;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            .button, .register-button {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
 </head>
 <body>
 <div class="container">
-  <h2>Welcome to the Quiz Game!</h2>
-  <div class="buttons">
-    <button class="button" onclick="window.location.href='/login'">Login</button>
-    <button class="button register-button" onclick="window.location.href='/register'">Register</button>
-  </div>
+    <h2>Welcome to the Quiz Game!</h2>
+    <p>Test your knowledge and challenge your friends.</p>
+    <div class="buttons">
+        <button class="button" onclick="window.location.href='/login'">Login</button>
+        <button class="button register-button" onclick="window.location.href='/register'">Register</button>
+    </div>
 </div>
 </body>
 </html>

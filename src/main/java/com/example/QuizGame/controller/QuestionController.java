@@ -108,7 +108,11 @@ public class QuestionController {
     public String failed(Model model) {
         String username = (String) httpSession.getAttribute("username");
         model.addAttribute("username", username);
-        httpSession.invalidate();
+        httpSession.removeAttribute("randomQuestions");
+        httpSession.removeAttribute("currentQuestionIndex");
+        httpSession.removeAttribute("actionState");
+        httpSession.removeAttribute("username");
+        httpSession.removeAttribute("selectedCategory");
         return "failed";
     }
 

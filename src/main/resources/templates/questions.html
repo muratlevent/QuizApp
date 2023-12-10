@@ -48,14 +48,30 @@
             height: 75px;
         }
 
-        .color-1 { background-color: #2a9d8f; }
-        .color-2 { background-color: #e9c46a; }
-        .color-3 { background-color: #f4a261; }
-        .color-4 { background-color: #e76f51; }
+        .color-1 {
+            background-color: #2a9d8f;
+        }
+
+        .color-2 {
+            background-color: #e9c46a;
+        }
+
+        .color-3 {
+            background-color: #f4a261;
+        }
+
+        .color-4 {
+            background-color: #e76f51;
+        }
 
         .answer-button:hover {
             transform: scale(1.05);
             box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .answer-button:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
         }
 
         .correct {
@@ -109,19 +125,19 @@
 </div>
 <script>
     let answered = false;
-        let timeLeft = 12;
-        const timerDisplay = document.getElementById('timerDisplay');
-        let timerInterval = setInterval(updateTimer, 1000);
+    let timeLeft = 12;
+    const timerDisplay = document.getElementById('timerDisplay');
+    let timerInterval = setInterval(updateTimer, 1000);
 
-        function updateTimer() {
-            if(timeLeft <= 0) {
-                clearInterval(timerInterval);
-                setFailed();
-            } else {
-                timerDisplay.textContent = timeLeft;
-                timeLeft -= 1;
-            }
+    function updateTimer() {
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            setFailed();
+        } else {
+            timerDisplay.textContent = timeLeft;
+            timeLeft -= 1;
         }
+    }
 
     function setFailed() {
         window.location.href = '/failed';
