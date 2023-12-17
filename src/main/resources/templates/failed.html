@@ -4,30 +4,68 @@
     <meta charset="UTF-8">
     <title>Failed!</title>
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #264653;
+        body, html {
+            height: 100%;
             margin: 0;
-            padding: 0;
-            box-sizing: border-box;
             display: flex;
-            align-items: center;
             justify-content: center;
-            height: 100vh;
-            color: white;
+            align-items: center;
+            flex-direction: column;
+            font-family: Arial, sans-serif;
+            background-color: #264653;
         }
 
         .container {
             text-align: center;
-            width: 80%;
+            width: 50%;
             max-width: 960px;
-            margin: 0 auto;
+            padding: 150px;
+            border-radius: 8px;
+            background: #F3E0AC;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: auto;
         }
 
-        h1 {
-            font-size: 2.4rem;
+        .navbar {
+            width: 100%;
+            background-color: #333;
+            overflow: hidden;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logout-button {
+            background: none;
+            float: right;
+            border: none;
+            color: white;
+            padding: 14px 16px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-right: 10px;
+        }
+
+        .logout-button:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
+        .logout-button:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .failed-text {
             color: #e76f51;
+            font-size: 2.4rem;
             margin: 0.5rem auto;
+        }
+
+        img {
+            max-width: 50%;
+            height: auto;
         }
 
         h2 {
@@ -44,7 +82,7 @@
             padding: 10px 20px;
             font-size: 1.2rem;
             cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
@@ -58,13 +96,25 @@
             box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
         }
 
-
+        .motivational-text {
+            color: #f4a261;
+            margin: 20px 0;
+            font-size: 1.2rem;
+        }
     </style>
 </head>
 <body>
+<div class="navbar">
+    <form th:action="@{/logout}" method="post" th:object="${#httpServletRequest}">
+        <input type="hidden" name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+        <button type="submit" class="logout-button">Logout</button>
+    </form>
+</div>
 <div class="container">
-    <h1>Almost There!</h1>
+    <h1 class="failed-text">Almost There!</h1>
     <h2 th:text="'Don\'t worry, ' + ${username} + ', you can try again!'"></h2>
+    <img th:src="@{/failed-cat.png}" alt="Prize"/>
+    <p class="motivational-text">Let's play again!</p>
     <button class="retry-button" onclick="window.location.href='/start'">Try Again</button>
 </div>
 </body>

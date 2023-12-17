@@ -116,6 +116,18 @@ public class QuestionController {
         return "failed";
     }
 
+    @GetMapping("/timesUp")
+    public String timesUp(Model model) {
+        String username = (String) httpSession.getAttribute("username");
+        model.addAttribute("username", username);
+        httpSession.removeAttribute("randomQuestions");
+        httpSession.removeAttribute("currentQuestionIndex");
+        httpSession.removeAttribute("actionState");
+        httpSession.removeAttribute("username");
+        httpSession.removeAttribute("selectedCategory");
+        return "timesUp";
+    }
+
     @GetMapping("/testRandomQuestionsByCategory")
     public ResponseEntity<List<Question>> testRandomQuestionsByCategory(@RequestParam String category,
                                                                         @RequestParam int count) {

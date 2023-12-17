@@ -1,5 +1,6 @@
 package com.example.QuizGame;
 
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,19 +14,24 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeRequests(authorize ->
+                .authorizeHttpRequests(authorize ->
                         authorize
-                                .requestMatchers("/login", "/register", "/home").permitAll() // Bu URL'ler herkese açık
-                                .anyRequest().authenticated() // Diğer tüm istekler için kimlik doğrulaması gerektirir
+                                .requestMatchers("/login", "/register", "/home").permitAll()
+                                .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                                .anyRequest().authenticated()
                 )
                 .formLogin(formLogin ->
                         formLogin
-                                .loginPage("/login") // Özel giriş sayfası
-                                .defaultSuccessUrl("/start", true) // Girişten sonra /start'a yönlendirme
+                                .loginPage("/login")
+                                .defaultSuccessUrl("/start", true)
                                 .permitAll()
                 )
-                .logout(logout ->
-                        logout.permitAll()
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                        .permitAll()
                 );
 
         return http.build();

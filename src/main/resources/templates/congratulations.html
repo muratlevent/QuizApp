@@ -17,8 +17,44 @@
 
         .container {
             text-align: center;
-            width: 80%;
+            width: 50%;
             max-width: 960px;
+            padding: 150px;
+            border-radius: 8px;
+            background: #F3E0AC;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: auto;
+        }
+
+        .navbar {
+            width: 100%;
+            background-color: #333;
+            overflow: hidden;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logout-button {
+            background: none;
+            float: right;
+            border: none;
+            color: white;
+            padding: 14px 16px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-right: 10px;
+        }
+
+        .logout-button:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
+        .logout-button:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
         }
 
         .congratulations {
@@ -68,10 +104,16 @@
     </style>
 </head>
 <body>
+<div class="navbar">
+    <form th:action="@{/logout}" method="post" th:object="${#httpServletRequest}">
+        <input type="hidden" name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+        <button type="submit" class="logout-button">Logout</button>
+    </form>
+</div>
 <div class="container">
     <h1 class="congratulations">Congratulations! You've completed the quiz!</h1>
     <h2 th:text="${username}"></h2>
-    <img th:src="@{/prize.png}" alt="Prize"/>
+    <img th:src="@{/congratulations-cat.png}" alt="Prize"/>
     <p class="motivational-text">Your knowledge is impressive! Want to try again and beat your score?</p>
     <button class="play-again-button" onclick="window.location.href='/start'">Play Again</button>
 </div>
