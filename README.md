@@ -98,6 +98,7 @@ The application guides you through the quiz process automatically:
 - Score Tracking and Leaderboards.
 - Mobile Responsiveness.
 - Additional Database Tool Integration.
+- Unit Test.
 
 ## Contributing
 Contributions are welcome. Please follow these guidelines:

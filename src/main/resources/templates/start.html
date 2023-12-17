@@ -14,85 +14,54 @@
             align-items: center;
             justify-content: center;
             height: 100vh;
-            color: white;
+            color: black;
         }
 
         .container {
             text-align: center;
-            width: 80%;
+            width: 50%;
             max-width: 960px;
-            margin: 0 auto;
+            padding: 150px;
+            border-radius: 8px;
+            background: #F3E0AC;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: auto;
         }
 
-        h2 {
-            font-size: 2.4rem;
-            margin-bottom: 1rem;
-        }
-
-        .input-group {
-            margin-bottom: 20px;
-            background: #F4A261;
-            border-radius: 10px;
+        .navbar {
+            width: 100%;
+            background-color: #333;
             overflow: hidden;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
         }
 
-        .input-group input {
-            width: 100%;
+        .logout-button {
+            background: none;
+            float: right;
             border: none;
-            padding: 20px;
-            font-size: 1.5rem;
             color: white;
-            background: transparent;
+            padding: 14px 16px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-right: 10px;
         }
 
-        .start-button {
-            padding: 20px;
-            border-radius: 10px;
-            border: none;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            font-size: 1.5rem;
-            width: 100%;
-            height: 75px;
-            background-color: #2a9d8f;
+        .logout-button:hover {
+            background-color: #ddd;
+            color: black;
         }
 
-        .start-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                width: 90%;
-            }
-        }
-    </style>
-
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #264653;
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            color: white;
-        }
-
-        .container {
-            text-align: center;
-            width: 80%;
-            max-width: 960px;
-            margin: 0 auto;
+        .logout-button:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
         }
 
         h2 {
             font-size: 2.4rem;
-            margin-bottom: 1rem;
+            margin-bottom: 1em;
         }
 
         .input-group {
@@ -121,12 +90,18 @@
             font-size: 1.5rem;
             width: 100%;
             height: 75px;
+            color: white;
             background-color: #2a9d8f;
         }
 
         .start-button:hover {
             transform: scale(1.05);
             box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .start-button:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
         }
 
         @media (max-width: 768px) {
@@ -150,11 +125,19 @@
     </style>
 </head>
 <body>
+<div class="navbar">
+    <form th:action="@{/logout}" method="post" th:object="${#httpServletRequest}">
+        <input type="hidden" name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+        <button type="submit" class="logout-button">Logout</button>
+    </form>
+</div>
 <div class="container">
-    <h2>Welcome to the Quiz Game!</h2>
+    <h2>You Are Ready To Start!</h2>
     <form th:action="@{/categories}" method="post">
         <div class="input-group">
-            <input type="text" name="username" placeholder="Enter your username" required/>
+            <label>
+                <input type="text" name="username" placeholder="Enter your username" required/>
+            </label>
         </div>
         <button type="submit" class="start-button">Start Quiz!</button>
     </form>
