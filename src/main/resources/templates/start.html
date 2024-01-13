@@ -133,14 +133,7 @@
 </div>
 <div class="container">
     <h2>You Are Ready To Start!</h2>
-    <form th:action="@{/categories}" method="post">
-        <div class="input-group">
-            <label>
-                <input type="text" name="username" placeholder="Enter your username" required/>
-            </label>
-        </div>
-        <button type="submit" class="start-button">Start Quiz!</button>
-    </form>
+        <button type="submit" class="start-button" onclick="window.location.href='/categories'">Start Quiz!</button>
 </div>
 </body>
 </html>

@@ -32,22 +32,18 @@ public class QuestionController {
     private HttpSession httpSession;
 
     @GetMapping("/start")
-    public String startQuiz() {
+    public String startQuiz(HttpSession httpSession, Model model) {
         httpSession.removeAttribute("randomQuestions");
         httpSession.removeAttribute("currentQuestionIndex");
         httpSession.removeAttribute("actionState");
+        String username = (String) httpSession.getAttribute("username");
+        model.addAttribute("username", username);
+
         return "start";
     }
 
     @GetMapping("/categories")
     public String showCategories() {
-        return "categories";
-    }
-
-    @PostMapping("/categories")
-    public String showCategories(@RequestParam String username, Model model) {
-        httpSession.setAttribute("username", username);
-        model.addAttribute("username", username);
         return "categories";
     }
 

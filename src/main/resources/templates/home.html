@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
@@ -123,10 +123,15 @@
 </head>
 <body>
 <div class="navbar">
-    <form th:action="@{/logout}" method="post" th:object="${#httpServletRequest}">
-        <input type="hidden" name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-        <button type="submit" class="logout-button">Logout</button>
-    </form>
+    <div th:if="${#authorization.expression('isAuthenticated()')}">
+        <form th:action="@{/logout}" method="post">
+            <input type="hidden" name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <button type="submit" class="logout-button">Logout</button>
+        </form>
+    </div>
+    <div th:unless="${#authorization.expression('isAuthenticated()')}">
+        <button class="logout-button" onclick="window.location.href='/login'">Login</button>
+    </div>
 </div>
 
 <div class="container">
