@@ -107,7 +107,6 @@ public class QuestionController {
         httpSession.removeAttribute("randomQuestions");
         httpSession.removeAttribute("currentQuestionIndex");
         httpSession.removeAttribute("actionState");
-        httpSession.removeAttribute("username");
         httpSession.removeAttribute("selectedCategory");
         return "failed";
     }
@@ -119,7 +118,6 @@ public class QuestionController {
         httpSession.removeAttribute("randomQuestions");
         httpSession.removeAttribute("currentQuestionIndex");
         httpSession.removeAttribute("actionState");
-        httpSession.removeAttribute("username");
         httpSession.removeAttribute("selectedCategory");
         return "timesUp";
     }
