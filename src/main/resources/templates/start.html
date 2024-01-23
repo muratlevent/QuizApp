@@ -5,7 +5,7 @@
     <title>Start Quiz</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'October Devanagari', sans-serif;
             background-color: #264653;
             margin: 0;
             padding: 0;
@@ -19,9 +19,9 @@
 
         .container {
             text-align: center;
-            width: 50%;
+            width: 40%;
             max-width: 960px;
-            padding: 150px;
+            padding: 200px;
             border-radius: 8px;
             background: #F3E0AC;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -59,9 +59,14 @@
             box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
         }
 
-        h2 {
+        h1 {
             font-size: 2.4rem;
             margin-bottom: 1em;
+        }
+
+        p {
+            font-size: 1.5rem;
+            margin: 0.5rem auto;
         }
 
         .input-group {
@@ -127,13 +132,17 @@
 <body>
 <div class="navbar">
     <form th:action="@{/logout}" method="post" th:object="${#httpServletRequest}">
-        <input type="hidden" name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+        <input type="hidden" name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
         <button type="submit" class="logout-button">Logout</button>
     </form>
 </div>
 <div class="container">
-    <h2>You Are Ready To Start!</h2>
-        <button type="submit" class="start-button" onclick="window.location.href='/categories'">Start Quiz!</button>
+    <h1>You Are Ready To Start!</h1>
+    <p th:text="'Okay, ' + ${username} + ', let\'s put your skills to the test...'"></p>
+    <button type="submit" class="start-button" onclick="window.location.href='/categories'">Start Quiz!</button>
 </div>
+<script>
+    sessionStorage.setItem('gameScore', '0'); // Setting game score to 0 (reset)
+</script>
 </body>
 </html>

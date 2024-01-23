@@ -5,7 +5,7 @@
     <title>Home</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'October Devanagari', sans-serif;
             background-color: #264653;
             margin: 0;
             padding: 0;
@@ -66,7 +66,6 @@
 
         p {
             margin-bottom: 2em;
-            /*color: #b3b3b3;*/
             font-size: 1.2rem;
         }
 
@@ -119,13 +118,40 @@
                 margin-bottom: 10px;
             }
         }
+
+        .slide-out-up {
+            animation: slideOutUp 0.5s ease-out forwards;
+        }
+
+        .slide-in-up {
+            animation: slideInUp 0.5s ease-out forwards;
+        }
+
+        @keyframes slideOutUp {
+            from {
+                transform: translateY(0);
+            }
+            to {
+                transform: translateY(-100%);
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
     </style>
 </head>
 <body>
 <div class="navbar">
     <div th:if="${#authorization.expression('isAuthenticated()')}">
         <form th:action="@{/logout}" method="post">
-            <input type="hidden" name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <input type="hidden" name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
             <button type="submit" class="logout-button">Logout</button>
         </form>
     </div>
@@ -136,11 +162,36 @@
 
 <div class="container">
     <h2>Welcome to the Quiz Game!</h2>
-    <p>Test your knowledge and challenge your friends.</p>
+    <p>If you get a high score, you probably spend way too much time on Wikipedia.</p>
     <div class="buttons">
-        <button class="button" onclick="window.location.href='/login'">Login</button>
-        <button class="button register-button" onclick="window.location.href='/register'">Register</button>
+        <button class="button" onclick="loadPage('/login')">Login</button>
+        <button class="button register-button" onclick="loadPage('/register')">Register</button>
     </div>
 </div>
+<script>
+    // AJAX ile Javascript kullanarak sayfa yükleme
+    function loadPage(url) {
+        var container = document.querySelector('.container');
+        container.classList.add('slide-out-up');
+
+        container.addEventListener('animationend', function () {
+            // Eski container'ı kaldır
+            document.body.removeChild(container);
+
+            // Yeni sayfanın içeriğini al
+            fetch(url)
+                .then(response => response.text())
+                .then(html => {
+                    // Yeni içeriği body'ye ekle
+                    document.body.innerHTML = html;
+
+                    // Yeni içeriğe animasyon uygula
+                    document.querySelector('.container').classList.add('slide-in-up');
+                })
+                .catch(error => console.error('Error loading new page:', error));
+        });
+    }
+
+</script>
 </body>
 </html>
