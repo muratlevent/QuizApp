@@ -38,6 +38,7 @@ public class QuestionController {
         httpSession.removeAttribute("actionState");
         String username = (String) httpSession.getAttribute("username");
         model.addAttribute("username", username);
+        httpSession.setAttribute("gameScore", 0);
 
         return "start";
     }
@@ -97,6 +98,9 @@ public class QuestionController {
     public String congratulations(Model model) {
         String username = (String) httpSession.getAttribute("username");
         model.addAttribute("username", username);
+        Long userId = (Long) httpSession.getAttribute("userId");
+        model.addAttribute("userId", userId);
+
         return "congratulations";
     }
 

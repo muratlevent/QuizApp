@@ -74,6 +74,12 @@
             margin: 0.5rem auto;
         }
 
+        .points {
+            font-size: 1.5rem;
+            color: #F4A261;
+            margin: 0.5rem auto;
+        }
+
         .retry-button {
             background-color: #2a9d8f;
             color: white;
@@ -106,16 +112,27 @@
 <body>
 <div class="navbar">
     <form th:action="@{/logout}" method="post" th:object="${#httpServletRequest}">
-        <input type="hidden" name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+        <input type="hidden" name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
         <button type="submit" class="logout-button">Logout</button>
     </form>
 </div>
 <div class="container">
     <h1 class="failed-text">Almost There!</h1>
     <h2 th:text="'Don\'t worry, ' + ${username} + ', you can try again!'"></h2>
+    <h2 class="points">You got <span id="finalScore"></span> points. Keep playing and improving!</h2>
     <img th:src="@{/failed-cat.png}" alt="Prize"/>
     <p class="motivational-text">Let's play again!</p>
     <button class="retry-button" onclick="window.location.href='/start'">Try Again</button>
 </div>
+<script>
+    window.onload = function () {
+
+        const userScore = sessionStorage.getItem('gameScore');
+
+        if (userScore !== null) {
+            document.getElementById('finalScore').textContent = userScore;
+        }
+    };
+</script>
 </body>
 </html>

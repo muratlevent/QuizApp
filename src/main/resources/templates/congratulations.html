@@ -111,11 +111,47 @@
     </form>
 </div>
 <div class="container">
-    <h1 class="congratulations">Congratulations! You've completed the quiz!</h1>
+    <h1 class="congratulations">
+        Congratulations! You've completed the quiz with <span id="finalScore"></span> points!
+    </h1>
     <h2 th:text="${username}"></h2>
     <img th:src="@{/congratulations-cat.png}" alt="Prize"/>
     <p class="motivational-text">Your knowledge is impressive! Want to try again and beat your score?</p>
     <button class="play-again-button" onclick="window.location.href='/start'">Play Again</button>
 </div>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const userId = [[${userId}]];
+    const csrfToken = [[${_csrf.token}]];
+    window.onload = async function() {
+        const userScore = sessionStorage.getItem('gameScore');
+        const timeTaken = 5;
+        //const timeTaken = sessionStorage.getItem('timeSpent'); // will implement this later
+
+        if (userScore !== null) {
+            document.getElementById('finalScore').textContent = userScore;
+        }
+
+        if (userId != null && userScore != null) {
+            try {
+                const response = await fetch('/api/saveScore', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    body: `userId=${userId}&score=${userScore}&timeTaken=${timeTaken}`
+                });
+
+                if (!response.ok) {
+                    console.error('Failed to save score');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+    };
+    /*]]>*/
+</script>
 </body>
 </html>

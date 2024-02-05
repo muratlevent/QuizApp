@@ -155,15 +155,18 @@
             stroke-dasharray: 1000;
             stroke-dashoffset: 0;
         }
+
         .path.circle {
             -webkit-animation: dash .9s ease-in-out;
             animation: dash .9s ease-in-out;
         }
+
         .path.line {
             stroke-dashoffset: 1000;
             -webkit-animation: dash .9s .35s ease-in-out forwards;
             animation: dash .9s .35s ease-in-out forwards;
         }
+
         .path.check {
             stroke-dashoffset: -100;
             -webkit-animation: dash-check .9s .35s ease-in-out forwards;
@@ -181,9 +184,11 @@
             transform: translateX(-50%);
             z-index: 1000;
         }
+
         p.success {
             color: #73AF55;
         }
+
         p.error {
             color: #D06079;
         }
@@ -228,7 +233,7 @@
 <body>
 <div class="navbar">
     <form th:action="@{/logout}" method="post" th:object="${#httpServletRequest}">
-        <input type="hidden" name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+        <input type="hidden" name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
         <button type="submit" class="logout-button">Logout</button>
     </form>
 </div>
@@ -249,24 +254,33 @@
     </div>
     <!-- Success animation elements -->
     <svg id="successAnimation" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
-        <circle class="path circle" fill="none" stroke="#73AF55" stroke-width="6" stroke-miterlimit="10" cx="65.1" cy="65.1" r="62.1"/>
-        <polyline class="path check" fill="none" stroke="#73AF55" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" points="100.2,40.2 51.5,88.8 29.8,67.5 "/>
+        <circle class="path circle" fill="none" stroke="#73AF55" stroke-width="6" stroke-miterlimit="10" cx="65.1"
+                cy="65.1" r="62.1"/>
+        <polyline class="path check" fill="none" stroke="#73AF55" stroke-width="6" stroke-linecap="round"
+                  stroke-miterlimit="10" points="100.2,40.2 51.5,88.8 29.8,67.5 "/>
     </svg>
     <p id="successMessage" class="success">Oh Yeah!</p>
 
     <!-- Error animation elements -->
     <svg id="errorAnimation" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
-        <circle class="path circle" fill="none" stroke="#D06079" stroke-width="6" stroke-miterlimit="10" cx="65.1" cy="65.1" r="62.1"/>
-        <line class="path line" fill="none" stroke="#D06079" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" x1="34.4" y1="37.9" x2="95.8" y2="92.3"/>
-        <line class="path line" fill="none" stroke="#D06079" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" x1="95.8" y1="38" x2="34.4" y2="92.2"/>
+        <circle class="path circle" fill="none" stroke="#D06079" stroke-width="6" stroke-miterlimit="10" cx="65.1"
+                cy="65.1" r="62.1"/>
+        <line class="path line" fill="none" stroke="#D06079" stroke-width="6" stroke-linecap="round"
+              stroke-miterlimit="10" x1="34.4" y1="37.9" x2="95.8" y2="92.3"/>
+        <line class="path line" fill="none" stroke="#D06079" stroke-width="6" stroke-linecap="round"
+              stroke-miterlimit="10" x1="95.8" y1="38" x2="34.4" y2="92.2"/>
     </svg>
     <p id="errorMessage" class="error">Bummer!</p>
 </div>
+<div class="score" id="scoreDisplay">Score: 0</div>
 <script>
     let answered = false;
     let timeLeft = 12;
+    let timeSpent = 0;
     const timerDisplay = document.getElementById('timerDisplay');
     let timerInterval = setInterval(updateTimer, 1000);
+    let userScore = sessionStorage.getItem('gameScore') ? parseInt(sessionStorage.getItem('gameScore')) : 0; // Getting score from session
+    document.getElementById('scoreDisplay').textContent = `Score: ${userScore}`; // Updating score display
 
     function updateTimer() {
         if (timeLeft <= 0) {
@@ -294,7 +308,9 @@
     function showAnimation(elementId, duration = 2000) {
         const element = document.getElementById(elementId);
         element.style.display = 'block';
-        setTimeout(() => { element.style.display = 'none'; }, duration);
+        setTimeout(() => {
+            element.style.display = 'none';
+        }, duration);
     }
 
     function setCorrect(button) {
@@ -303,6 +319,9 @@
             button.classList.add('correct');
             disableButtonsAndStopTimer();
             answered = true;
+            userScore += (timeLeft + 1) * 10; // Calculating score based on remaining time
+            sessionStorage.setItem('gameScore', userScore.toString()); // Storing score in session
+            document.getElementById('scoreDisplay').textContent = `Score: ${userScore}`; // Updating score display
             setTimeout(getNextQuestion, 1500);
             showAnimation('successAnimation');
             showAnimation('successMessage');
