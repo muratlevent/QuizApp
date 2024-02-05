@@ -1,40 +1,26 @@
-package com.example.QuizGame.model;
+package com.example.QuizGame.dto;
 
-import jakarta.persistence.*;
 import java.sql.Timestamp;
 
-@Entity
-@Table(name = "scores")
-public class Score {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
-
+public class UserScoreDTO {
+    private String username;
     private Integer score;
-
-    @Column(name = "time_taken")
     private Integer timeTaken;
-
     private Timestamp date;
 
-    public Long getId() {
-        return id;
+    public UserScoreDTO(String username, Integer score, Integer timeTaken, Timestamp date) {
+        this.username = username;
+        this.score = score;
+        this.timeTaken = timeTaken;
+        this.date = date;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public String getUsername() {
+        return username;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public Integer getScore() {

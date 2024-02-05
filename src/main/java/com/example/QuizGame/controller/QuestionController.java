@@ -39,6 +39,7 @@ public class QuestionController {
         String username = (String) httpSession.getAttribute("username");
         model.addAttribute("username", username);
         httpSession.setAttribute("gameScore", 0);
+        httpSession.setAttribute("timeTaken", 0);
 
         return "start";
     }
@@ -108,6 +109,8 @@ public class QuestionController {
     public String failed(Model model) {
         String username = (String) httpSession.getAttribute("username");
         model.addAttribute("username", username);
+        Long userId = (Long) httpSession.getAttribute("userId");
+        model.addAttribute("userId", userId);
         httpSession.removeAttribute("randomQuestions");
         httpSession.removeAttribute("currentQuestionIndex");
         httpSession.removeAttribute("actionState");
@@ -119,6 +122,8 @@ public class QuestionController {
     public String timesUp(Model model) {
         String username = (String) httpSession.getAttribute("username");
         model.addAttribute("username", username);
+        Long userId = (Long) httpSession.getAttribute("userId");
+        model.addAttribute("userId", userId);
         httpSession.removeAttribute("randomQuestions");
         httpSession.removeAttribute("currentQuestionIndex");
         httpSession.removeAttribute("actionState");
