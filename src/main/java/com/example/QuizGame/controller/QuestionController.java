@@ -1,5 +1,6 @@
 package com.example.QuizGame.controller;
 
+import com.example.QuizGame.model.Answer;
 import com.example.QuizGame.model.Question;
 import com.example.QuizGame.repository.*;
 import com.example.QuizGame.service.RandomQuestionService;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -39,6 +42,7 @@ public class QuestionController {
         String username = (String) httpSession.getAttribute("username");
         model.addAttribute("username", username);
         httpSession.setAttribute("gameScore", 0);
+        httpSession.setAttribute("timeTaken", 0);
 
         return "start";
     }
@@ -67,7 +71,7 @@ public class QuestionController {
         String actionState = (String) httpSession.getAttribute("actionState");
 
         if (randomQuestions == null || currentQuestionIndex == null || actionState == null) {
-            randomQuestions = randomQuestionService.getRandomQuestionsByCategory(3, category);
+            randomQuestions = randomQuestionService.getRandomQuestionsByCategory(10, category);
             httpSession.setAttribute("randomQuestions", randomQuestions);
             currentQuestionIndex = 0;
             httpSession.setAttribute("currentQuestionIndex", currentQuestionIndex);
@@ -83,8 +87,10 @@ public class QuestionController {
         }
 
         Question currentQuestion = randomQuestions.get(currentQuestionIndex);
+        List<Answer> shuffledAnswers = new ArrayList<>(currentQuestion.getAnswers());
+        Collections.shuffle(shuffledAnswers);
         model.addAttribute("questionText", currentQuestion.getQuestionText());
-        model.addAttribute("answers", currentQuestion.getAnswers());
+        model.addAttribute("answers", shuffledAnswers);
         return "questions";
     }
 
@@ -108,6 +114,8 @@ public class QuestionController {
     public String failed(Model model) {
         String username = (String) httpSession.getAttribute("username");
         model.addAttribute("username", username);
+        Long userId = (Long) httpSession.getAttribute("userId");
+        model.addAttribute("userId", userId);
         httpSession.removeAttribute("randomQuestions");
         httpSession.removeAttribute("currentQuestionIndex");
         httpSession.removeAttribute("actionState");
@@ -119,6 +127,8 @@ public class QuestionController {
     public String timesUp(Model model) {
         String username = (String) httpSession.getAttribute("username");
         model.addAttribute("username", username);
+        Long userId = (Long) httpSession.getAttribute("userId");
+        model.addAttribute("userId", userId);
         httpSession.removeAttribute("randomQuestions");
         httpSession.removeAttribute("currentQuestionIndex");
         httpSession.removeAttribute("actionState");

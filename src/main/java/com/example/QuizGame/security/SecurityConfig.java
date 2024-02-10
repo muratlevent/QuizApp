@@ -31,7 +31,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorize ->
                         authorize
-                                .requestMatchers("/login", "/register", "/home").permitAll()
+                                .requestMatchers("/login", "/register", "/home", "/scoreboard").permitAll()
                                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                                 .anyRequest().authenticated()
                 )
