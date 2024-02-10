@@ -14,8 +14,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.ModelAndView;
+import jakarta.validation.Valid;
 
 @Controller
 public class RegistrationController {
@@ -31,22 +34,28 @@ public class RegistrationController {
 
     @Autowired
     private HttpServletRequest request;
+
     @GetMapping("/register")
-    public String showRegistrationForm() {
-        return "register";
+    public ModelAndView showRegistrationForm() {
+        ModelAndView modelAndView = new ModelAndView("register");
+        modelAndView.addObject("user", new User());
+        return modelAndView;
     }
 
     @Transactional
     @PostMapping("/register")
-    public String registerUser(String username, String password) {
-        User newUser = new User();
-        newUser.setUsername(username);
-        newUser.setPassword(passwordEncoder.encode(password));
+    public String registerUser(@Valid User newUser, BindingResult result) {
+        if (result.hasErrors()) {
+            return "register";
+        }
+
+        String originalPassword = newUser.getPassword();
+        newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
         newUser.setActive(true);
         userRepository.save(newUser);
 
         Authentication auth = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(username, password)
+                new UsernamePasswordAuthenticationToken(newUser.getUsername(), originalPassword)
         );
 
         if (auth.isAuthenticated()) {
@@ -55,7 +64,9 @@ public class RegistrationController {
 
             HttpSession session = request.getSession(true);
             session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, sc);
-            session.setAttribute("username", username);
+            session.setAttribute("username", newUser.getUsername());
+            session.setAttribute("userId", newUser.getId());
+
 
             return "redirect:/start";
         } else {

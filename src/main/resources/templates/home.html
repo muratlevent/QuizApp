@@ -183,11 +183,19 @@
 <div class="container">
     <h2>Welcome to the Quiz Game!</h2>
     <p>If you get a high score, you probably spend way too much time on Wikipedia.</p>
-    <div class="buttons">
+    <div class="buttons" sec:authorize="!isAuthenticated()">
         <button class="button" onclick="loadPage('/login')">Login</button>
         <button class="button register-button" onclick="loadPage('/register')">Register</button>
     </div>
+    <div class="buttons" sec:authorize="isAuthenticated()">
+        <button class="button" onclick="loadPage('/start')">Start</button>
+        <form th:action="@{/logout}" method="post" style="display: inline;">
+            <input type="hidden" name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <button type="submit" class="button register-button">Logout</button>
+        </form>
+    </div>
 </div>
+
 <script>
     // AJAX ile Javascript kullanarak sayfa yükleme
     function loadPage(url) {

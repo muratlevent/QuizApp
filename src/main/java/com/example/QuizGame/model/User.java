@@ -3,7 +3,9 @@ package com.example.QuizGame.model;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import jakarta.persistence.*;
-
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Pattern;
 import java.util.Collection;
 import java.util.List;
 
@@ -15,8 +17,14 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Username cannot be blank")
+    @Size(min = 4, max = 20, message = "Username must be between 4 and 20 characters")
+    @Pattern(regexp = "^[A-Za-z0-9]+$", message = "Username must contain only letters and numbers")
     private String username;
 
+    @NotBlank(message = "Password cannot be blank")
+    @Size(min = 8, message = "Password must be at least 8 characters long")
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$", message = "Password must contain at least one uppercase letter, one lowercase letter, and one number")
     private String password;
 
     private boolean active;
