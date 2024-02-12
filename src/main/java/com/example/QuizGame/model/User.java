@@ -6,9 +6,15 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.Pattern;
+
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Entity class representing a user in the Quiz Game application.
+ * This class stores user information and implements the UserDetails interface for Spring Security integration.
+ * Also adds validation constraints to the fields.
+ */
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {

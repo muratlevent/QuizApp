@@ -6,7 +6,6 @@ import com.example.QuizGame.repository.*;
 import com.example.QuizGame.service.RandomQuestionService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +14,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Controller for handling quiz game related requests.
+ * This controller manages the quiz game flow, including starting a quiz, selecting categories,
+ * fetching and answering questions, and handling the completion of the quiz.
+ */
 @Controller
 @RequestMapping(path = "/")
 public class QuestionController {
@@ -24,6 +28,13 @@ public class QuestionController {
     private final AnswerRepository answerRepository;
     private final RandomQuestionService randomQuestionService;
 
+    /**
+     * Constructor for QuestionController.
+     *
+     * @param questionRepository Repository for accessing question data.
+     * @param answerRepository Repository for accessing answer data.
+     * @param randomQuestionService Service for fetching random questions.
+     */
     public QuestionController(QuestionRepository questionRepository, AnswerRepository answerRepository,
                               RandomQuestionService randomQuestionService) {
         this.questionRepository = questionRepository;
@@ -34,6 +45,13 @@ public class QuestionController {
     @Autowired
     private HttpSession httpSession;
 
+    /**
+     * Starts the quiz and initializes the session attributes.
+     *
+     * @param httpSession Session object to store quiz data.
+     * @param model Model object to add attributes used for rendering views.
+     * @return The name of the view to be rendered.
+     */
     @GetMapping("/start")
     public String startQuiz(HttpSession httpSession, Model model) {
         httpSession.removeAttribute("randomQuestions");
@@ -47,17 +65,34 @@ public class QuestionController {
         return "start";
     }
 
+    /**
+     * Shows the categories page for the quiz.
+     *
+     * @return The name of the view to be rendered.
+     */
     @GetMapping("/categories")
     public String showCategories() {
         return "categories";
     }
 
+    /**
+     * Handles the category selection for the quiz.
+     *
+     * @param category The selected quiz category.
+     * @return Redirects to the questions page.
+     */
     @PostMapping("/selectCategory")
     public String selectCategory(@RequestParam String category) {
         httpSession.setAttribute("selectedCategory", category);
         return "redirect:/questions";
     }
 
+    /**
+     * Retrieves and displays questions for the selected category.
+     *
+     * @param model Model object to add attributes used for rendering views.
+     * @return The name of the view to be rendered or a redirect if conditions are not met.
+     */
     @GetMapping("/questions")
     public String getQuestions(Model model) {
         String category = (String) httpSession.getAttribute("selectedCategory");
@@ -94,12 +129,23 @@ public class QuestionController {
         return "questions";
     }
 
+    /**
+     * Sets the action state to 'answered' to proceed to the next question.
+     *
+     * @return Redirects to the questions page.
+     */
     @GetMapping("/answerQuestion")
     public String answerQuestion() {
         httpSession.setAttribute("actionState", "answered");
         return "redirect:/questions";
     }
 
+    /**
+     * Displays the congratulations page upon completing the quiz.
+     *
+     * @param model Model object to add attributes used for rendering views.
+     * @return The name of the view to be rendered.
+     */
     @GetMapping("/congratulations")
     public String congratulations(Model model) {
         String username = (String) httpSession.getAttribute("username");
@@ -110,6 +156,12 @@ public class QuestionController {
         return "congratulations";
     }
 
+    /**
+     * Displays the failed page if the user fails the quiz.
+     *
+     * @param model Model object to add attributes used for rendering views.
+     * @return The name of the view to be rendered.
+     */
     @GetMapping("/failed")
     public String failed(Model model) {
         String username = (String) httpSession.getAttribute("username");
@@ -123,6 +175,12 @@ public class QuestionController {
         return "failed";
     }
 
+    /**
+     * Displays the times up page if the user runs out of time.
+     *
+     * @param model Model object to add attributes used for rendering views.
+     * @return The name of the view to be rendered.
+     */
     @GetMapping("/timesUp")
     public String timesUp(Model model) {
         String username = (String) httpSession.getAttribute("username");
@@ -134,13 +192,6 @@ public class QuestionController {
         httpSession.removeAttribute("actionState");
         httpSession.removeAttribute("selectedCategory");
         return "timesUp";
-    }
-
-    @GetMapping("/testRandomQuestionsByCategory")
-    public ResponseEntity<List<Question>> testRandomQuestionsByCategory(@RequestParam String category,
-                                                                        @RequestParam int count) {
-        List<Question> randomQuestions = randomQuestionService.getRandomQuestionsByCategory(count, category);
-        return ResponseEntity.ok(randomQuestions);
     }
 
 }

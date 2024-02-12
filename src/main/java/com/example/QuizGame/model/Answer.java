@@ -3,6 +3,11 @@ package com.example.QuizGame.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+/**
+ * Entity class representing an answer in the Quiz Game application.
+ * This class stores the details of an answer, including its text, whether it is correct,
+ * and its association with a question.
+ */
 @Entity
 @Table(name = "answers")
 public class Answer {
