@@ -20,6 +20,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import jakarta.validation.Valid;
 
+/**
+ * Controller for handling registration requests for the Quiz Game application.
+ * This controller manages user registration, including displaying the registration form and processing user registration.
+ */
 @Controller
 public class RegistrationController {
 
@@ -35,6 +39,11 @@ public class RegistrationController {
     @Autowired
     private HttpServletRequest request;
 
+    /**
+     * Shows the registration form to the user.
+     *
+     * @return A ModelAndView object containing the view name and a new user object for the form.
+     */
     @GetMapping("/register")
     public ModelAndView showRegistrationForm() {
         ModelAndView modelAndView = new ModelAndView("register");
@@ -42,6 +51,15 @@ public class RegistrationController {
         return modelAndView;
     }
 
+    /**
+     * Processes the user registration.
+     * This method handles the registration logic including saving the new user to the database, validating user input,
+     * encoding the password, and authenticating the user upon successful registration.
+     *
+     * @param newUser The user object populated from the registration form.
+     * @param result BindingResult that holds the result of the validation and binding and contains errors that may have occurred.
+     * @return Redirects to the start page on successful registration, or back to the registration form on error.
+     */
     @Transactional
     @PostMapping("/register")
     public String registerUser(@Valid User newUser, BindingResult result) {

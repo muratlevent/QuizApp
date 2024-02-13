@@ -2,6 +2,10 @@ package com.example.QuizGame.dto;
 
 import java.sql.Timestamp;
 
+/**
+ * Data Transfer Object (DTO) representing a user's score.
+ * This class is used to transfer user score data, including the username, score, time taken, and the date of the score.
+ */
 public class UserScoreDTO {
     private String username;
     private Integer score;

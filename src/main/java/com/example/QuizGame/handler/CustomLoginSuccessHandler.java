@@ -12,9 +12,25 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+/**
+ * Custom handler for successful authentication in the Quiz Game application.
+ * This class implements the AuthenticationSuccessHandler interface to provide custom
+ * logic after a user successfully authenticates.
+ */
 @Component("CustomLoginSuccessHandler")
 public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 
+    /**
+     * Handles the logic to be executed upon successful authentication.
+     * This method sets the authenticated user's username and ID in the session and
+     * redirects the user to the start page of the application.
+     *
+     * @param request The HttpServletRequest object.
+     * @param response The HttpServletResponse object.
+     * @param authentication The Authentication object containing details of the authenticated user.
+     * @throws IOException If an input or output exception occurs.
+     * @throws ServletException If a servlet exception occurs.
+     */
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response, Authentication authentication)
@@ -24,7 +40,6 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
         String username = authentication.getName();
         session.setAttribute("username", username);
 
-        // This block is for getting the user ID from User and storing user ID in session
         if (authentication.getPrincipal() instanceof UserDetails userDetails) {
             User user = (User) userDetails;
             Long userId = user.getId();

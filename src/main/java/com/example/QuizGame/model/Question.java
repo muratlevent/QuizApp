@@ -4,6 +4,10 @@ import jakarta.persistence.*;
 
 import java.util.List;
 
+/**
+ * Entity class representing a question in the Quiz Game application.
+ * This class stores information about a quiz question, including its text, category, and associated answers.
+ */
 @Entity
 @Table(name = "questions")
 public class Question {

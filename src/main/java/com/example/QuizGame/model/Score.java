@@ -3,6 +3,11 @@ package com.example.QuizGame.model;
 import jakarta.persistence.*;
 import java.sql.Timestamp;
 
+/**
+ * Entity class representing a score in the Quiz Game application.
+ * This class stores information about a user's game score, including the score value, time taken,
+ * date of the score, and the associated user.
+ */
 @Entity
 @Table(name = "scores")
 public class Score {
