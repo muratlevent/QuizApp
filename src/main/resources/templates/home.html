@@ -135,32 +135,6 @@
             }
         }
 
-        .slide-out-up {
-            animation: slideOutUp 0.5s ease-out forwards;
-        }
-
-        .slide-in-up {
-            animation: slideInUp 0.5s ease-out forwards;
-        }
-
-        @keyframes slideOutUp {
-            from {
-                transform: translateY(0);
-            }
-            to {
-                transform: translateY(-100%);
-            }
-        }
-
-        @keyframes slideInUp {
-            from {
-                transform: translateY(100%);
-            }
-            to {
-                transform: translateY(0);
-            }
-        }
-
     </style>
 </head>
 <body>
@@ -184,42 +158,16 @@
     <h2>Welcome to the Quiz Game!</h2>
     <p>If you get a high score, you probably spend way too much time on Wikipedia.</p>
     <div class="buttons" sec:authorize="!isAuthenticated()">
-        <button class="button" onclick="loadPage('/login')">Login</button>
-        <button class="button register-button" onclick="loadPage('/register')">Register</button>
+        <button class="button" onclick="window.location.href='/login'">Login</button>
+        <button class="button register-button" onclick="window.location.href='/register'">Register</button>
     </div>
     <div class="buttons" sec:authorize="isAuthenticated()">
-        <button class="button" onclick="loadPage('/start')">Start</button>
+        <button class="button" onclick="window.location.href='/start'">Start</button>
         <form th:action="@{/logout}" method="post" style="display: inline;">
             <input type="hidden" name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
             <button type="submit" class="button register-button">Logout</button>
         </form>
     </div>
 </div>
-
-<script>
-    // AJAX ile Javascript kullanarak sayfa yükleme
-    function loadPage(url) {
-        var container = document.querySelector('.container');
-        container.classList.add('slide-out-up');
-
-        container.addEventListener('animationend', function () {
-            // Eski container'ı kaldır
-            document.body.removeChild(container);
-
-            // Yeni sayfanın içeriğini al
-            fetch(url)
-                .then(response => response.text())
-                .then(html => {
-                    // Yeni içeriği body'ye ekle
-                    document.body.innerHTML = html;
-
-                    // Yeni içeriğe animasyon uygula
-                    document.querySelector('.container').classList.add('slide-in-up');
-                })
-                .catch(error => console.error('Error loading new page:', error));
-        });
-    }
-
-</script>
 </body>
 </html>
