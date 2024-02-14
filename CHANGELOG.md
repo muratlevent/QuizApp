@@ -7,6 +7,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [2024-02-14]
+### Fixed
+- Fixed a bug where AJAX requests preventing the reset of the score and the game state.
+
 ## [2024-02-12]
 ### Added
 - Javadoc comments for enhanced documentation across all main classes and methods in the `com.example.QuizGame` package.
