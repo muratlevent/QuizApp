@@ -3,6 +3,7 @@ package com.example.QuizGame.controller;
 import com.example.QuizGame.model.Answer;
 import com.example.QuizGame.model.Question;
 import com.example.QuizGame.repository.*;
+import com.example.QuizGame.service.QuestionRetrievalService;
 import com.example.QuizGame.service.RandomQuestionService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,13 +56,13 @@ public class QuestionController {
      */
     @GetMapping("/start")
     public String startQuiz(HttpSession httpSession, Model model) {
-        httpSession.removeAttribute("randomQuestions");
-        httpSession.removeAttribute("currentQuestionIndex");
-        httpSession.removeAttribute("actionState");
-        String username = (String) httpSession.getAttribute("username");
+        SessionHelper sessionHelper = new SessionHelper(httpSession);
+        sessionHelper.removeAttributes("randomQuestions", "currentQuestionIndex", "actionState");
+
+        String username = sessionHelper.getAttribute("username", String.class);
         model.addAttribute("username", username);
-        httpSession.setAttribute("gameScore", 0);
-        httpSession.setAttribute("timeTaken", 0);
+        sessionHelper.setAttribute("gameScore", 0);
+        sessionHelper.setAttribute("timeTaken", 0);
 
         return "start";
     }
@@ -83,8 +84,8 @@ public class QuestionController {
      * @return Redirects to the questions page.
      */
     @PostMapping("/selectCategory")
-    public String selectCategory(@RequestParam String category) {
-        httpSession.setAttribute("selectedCategory", category);
+    public String selectCategory(@RequestParam String category, HttpSession httpSession) {
+        new CategorySelectionHelper(httpSession).selectCategory(category);
         return "redirect:/questions";
     }
 
@@ -95,40 +96,31 @@ public class QuestionController {
      * @return The name of the view to be rendered or a redirect if conditions are not met.
      */
     @GetMapping("/questions")
-    public String getQuestions(Model model) {
+    public String getQuestions(Model model, HttpSession httpSession) {
         String category = (String) httpSession.getAttribute("selectedCategory");
 
         if (category == null) {
             return "redirect:/start";
         }
 
-        List<Question> randomQuestions = (List<Question>) httpSession.getAttribute("randomQuestions");
-        Integer currentQuestionIndex = (Integer) httpSession.getAttribute("currentQuestionIndex");
-        String actionState = (String) httpSession.getAttribute("actionState");
+        QuestionRetrievalService questionRetrievalService = new QuestionRetrievalService(httpSession, randomQuestionService);
+        List<Question> randomQuestions = questionRetrievalService.retrieveQuestions(category);
 
-        if (randomQuestions == null || currentQuestionIndex == null || actionState == null) {
-            randomQuestions = randomQuestionService.getRandomQuestionsByCategory(10, category);
-            httpSession.setAttribute("randomQuestions", randomQuestions);
-            currentQuestionIndex = 0;
-            httpSession.setAttribute("currentQuestionIndex", currentQuestionIndex);
-            actionState = "viewing";
-            httpSession.setAttribute("actionState", actionState);
-        } else if ("answered".equals(actionState) && currentQuestionIndex < randomQuestions.size() - 1) {
-            currentQuestionIndex++;
-            httpSession.setAttribute("currentQuestionIndex", currentQuestionIndex);
-            actionState = "viewing";
-            httpSession.setAttribute("actionState", actionState);
-        } else if (currentQuestionIndex >= randomQuestions.size() - 1) {
+        Integer currentQuestionIndex = (Integer) httpSession.getAttribute("currentQuestionIndex");
+        if (currentQuestionIndex >= randomQuestions.size() - 1) {
             return "redirect:/congratulations";
         }
 
         Question currentQuestion = randomQuestions.get(currentQuestionIndex);
         List<Answer> shuffledAnswers = new ArrayList<>(currentQuestion.getAnswers());
         Collections.shuffle(shuffledAnswers);
+
         model.addAttribute("questionText", currentQuestion.getQuestionText());
         model.addAttribute("answers", shuffledAnswers);
+
         return "questions";
     }
+
 
     /**
      * Sets the action state to 'answered' to proceed to the next question.
@@ -148,12 +140,9 @@ public class QuestionController {
      * @return The name of the view to be rendered.
      */
     @GetMapping("/congratulations")
-    public String congratulations(Model model) {
-        String username = (String) httpSession.getAttribute("username");
-        model.addAttribute("username", username);
-        Long userId = (Long) httpSession.getAttribute("userId");
-        model.addAttribute("userId", userId);
-
+    public String congratulations(HttpSession httpSession, Model model) {
+        addUserDetailsToModel(httpSession, model);
+        clearSession(httpSession);
         return "congratulations";
     }
 
@@ -164,15 +153,9 @@ public class QuestionController {
      * @return The name of the view to be rendered.
      */
     @GetMapping("/failed")
-    public String failed(Model model) {
-        String username = (String) httpSession.getAttribute("username");
-        model.addAttribute("username", username);
-        Long userId = (Long) httpSession.getAttribute("userId");
-        model.addAttribute("userId", userId);
-        httpSession.removeAttribute("randomQuestions");
-        httpSession.removeAttribute("currentQuestionIndex");
-        httpSession.removeAttribute("actionState");
-        httpSession.removeAttribute("selectedCategory");
+    public String failed(HttpSession httpSession, Model model) {
+        addUserDetailsToModel(httpSession, model);
+        clearSession(httpSession);
         return "failed";
     }
 
@@ -183,16 +166,23 @@ public class QuestionController {
      * @return The name of the view to be rendered.
      */
     @GetMapping("/timesUp")
-    public String timesUp(Model model) {
-        String username = (String) httpSession.getAttribute("username");
-        model.addAttribute("username", username);
-        Long userId = (Long) httpSession.getAttribute("userId");
-        model.addAttribute("userId", userId);
-        httpSession.removeAttribute("randomQuestions");
-        httpSession.removeAttribute("currentQuestionIndex");
-        httpSession.removeAttribute("actionState");
-        httpSession.removeAttribute("selectedCategory");
+    public String timesUp(HttpSession httpSession, Model model) {
+        addUserDetailsToModel(httpSession, model);
+        clearSession(httpSession);
         return "timesUp";
+    }
+
+    private void addUserDetailsToModel(HttpSession httpSession, Model model) {
+        SessionHelper sessionHelper = new SessionHelper(httpSession);
+        String username = sessionHelper.getAttribute("username", String.class);
+        Long userId = sessionHelper.getAttribute("userId", Long.class);
+        model.addAttribute("username", username);
+        model.addAttribute("userId", userId);
+    }
+
+    private void clearSession(HttpSession httpSession) {
+        SessionHelper sessionHelper = new SessionHelper(httpSession);
+        sessionHelper.removeAttributes("randomQuestions", "currentQuestionIndex", "actionState", "selectedCategory");
     }
 
 }
