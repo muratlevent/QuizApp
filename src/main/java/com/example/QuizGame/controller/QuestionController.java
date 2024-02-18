@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import com.example.QuizGame.controller.SessionHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,7 +47,7 @@ public class QuestionController {
     private HttpSession httpSession;
 
     /**
-     * Starts the quiz and initializes the session attributes.
+     * Starts the quiz and initializes the session using SessionHelper.
      *
      * @param httpSession Session object to store quiz data.
      * @param model Model object to add attributes used for rendering views.
@@ -57,12 +56,8 @@ public class QuestionController {
     @GetMapping("/start")
     public String startQuiz(HttpSession httpSession, Model model) {
         SessionHelper sessionHelper = new SessionHelper(httpSession);
-        sessionHelper.removeAttributes("randomQuestions", "currentQuestionIndex", "actionState");
-
-        String username = sessionHelper.getAttribute("username", String.class);
-        model.addAttribute("username", username);
-        sessionHelper.setAttribute("gameScore", 0);
-        sessionHelper.setAttribute("timeTaken", 0);
+        sessionHelper.initializeQuiz();
+        addUserDetailsToModel(httpSession, model);
 
         return "start";
     }
@@ -78,21 +73,24 @@ public class QuestionController {
     }
 
     /**
-     * Handles the category selection for the quiz.
+     * Selects a category for the quiz and stores it in the session using SessionHelper.
      *
      * @param category The selected quiz category.
-     * @return Redirects to the questions page.
+     * @param httpSession The session object that will hold the quiz state.
+     * @return Redirects to the questions view.
      */
     @PostMapping("/selectCategory")
     public String selectCategory(@RequestParam String category, HttpSession httpSession) {
-        new CategorySelectionHelper(httpSession).selectCategory(category);
+        SessionHelper sessionHelper = new SessionHelper(httpSession);
+        sessionHelper.selectCategory(category);
         return "redirect:/questions";
     }
 
     /**
-     * Retrieves and displays questions for the selected category.
+     * Retrieves and displays questions for the selected category using the QuestionRetrievalService.
      *
      * @param model Model object to add attributes used for rendering views.
+     * @param httpSession The session object containing the current quiz state.
      * @return The name of the view to be rendered or a redirect if conditions are not met.
      */
     @GetMapping("/questions")
@@ -111,13 +109,7 @@ public class QuestionController {
             return "redirect:/congratulations";
         }
 
-        Question currentQuestion = randomQuestions.get(currentQuestionIndex);
-        List<Answer> shuffledAnswers = new ArrayList<>(currentQuestion.getAnswers());
-        Collections.shuffle(shuffledAnswers);
-
-        model.addAttribute("questionText", currentQuestion.getQuestionText());
-        model.addAttribute("answers", shuffledAnswers);
-
+        addQuestionAndAnswersToModel(model, randomQuestions, currentQuestionIndex);
         return "questions";
     }
 
@@ -134,44 +126,56 @@ public class QuestionController {
     }
 
     /**
-     * Displays the congratulations page upon completing the quiz.
+     * Displays the congratulations page upon successful completion of the quiz.
+     * It adds user details to the model and resets the quiz-related session attributes.
      *
-     * @param model Model object to add attributes used for rendering views.
-     * @return The name of the view to be rendered.
+     * @param httpSession The session object containing the current quiz state and user details.
+     * @param model The model object to add attributes used for rendering the congratulations view.
+     * @return The name of the view to be rendered for the congratulations page.
      */
     @GetMapping("/congratulations")
     public String congratulations(HttpSession httpSession, Model model) {
         addUserDetailsToModel(httpSession, model);
-        clearSession(httpSession);
+        resetQuizSession(httpSession);
         return "congratulations";
     }
 
     /**
-     * Displays the failed page if the user fails the quiz.
+     * Displays the failed page upon unsuccessful completion of the quiz.
+     * It adds user details to the model and resets the quiz-related session attributes.
      *
-     * @param model Model object to add attributes used for rendering views.
-     * @return The name of the view to be rendered.
+     * @param httpSession The session object containing the current quiz state and user details.
+     * @param model The model object to add attributes used for rendering the failed view.
+     * @return The name of the view to be rendered for the failed page.
      */
     @GetMapping("/failed")
     public String failed(HttpSession httpSession, Model model) {
         addUserDetailsToModel(httpSession, model);
-        clearSession(httpSession);
+        resetQuizSession(httpSession);
         return "failed";
     }
 
     /**
-     * Displays the times up page if the user runs out of time.
+     * Displays the timesUp page when the time limit for the quiz is reached.
+     * It adds user details to the model and resets the quiz-related session attributes.
      *
-     * @param model Model object to add attributes used for rendering views.
-     * @return The name of the view to be rendered.
+     * @param httpSession The session object containing the current quiz state and user details.
+     * @param model The model object to add attributes used for rendering the timesUp view.
+     * @return The name of the view to be rendered for the timesUp page.
      */
     @GetMapping("/timesUp")
     public String timesUp(HttpSession httpSession, Model model) {
         addUserDetailsToModel(httpSession, model);
-        clearSession(httpSession);
+        resetQuizSession(httpSession);
         return "timesUp";
     }
 
+    /**
+     * Adds user details to the model from the session using SessionHelper.
+     *
+     * @param httpSession The session object containing user details.
+     * @param model The model to which user details will be added.
+     */
     private void addUserDetailsToModel(HttpSession httpSession, Model model) {
         SessionHelper sessionHelper = new SessionHelper(httpSession);
         String username = sessionHelper.getAttribute("username", String.class);
@@ -180,9 +184,30 @@ public class QuestionController {
         model.addAttribute("userId", userId);
     }
 
-    private void clearSession(HttpSession httpSession) {
+    /**
+     * Resets the quiz-related attributes in the session using SessionHelper.
+     *
+     * @param httpSession The session object to be cleared.
+     */
+    private void resetQuizSession(HttpSession httpSession) {
         SessionHelper sessionHelper = new SessionHelper(httpSession);
         sessionHelper.removeAttributes("randomQuestions", "currentQuestionIndex", "actionState", "selectedCategory");
+    }
+
+    /**
+     * Adds the shuffled question and its answers to the model.
+     *
+     * @param model Model object to which question and answers will be added.
+     * @param questions List of questions from which the current question is retrieved.
+     * @param questionIndex Index of the current question in the list.
+     */
+    private void addQuestionAndAnswersToModel(Model model, List<Question> questions, int questionIndex) {
+        Question currentQuestion = questions.get(questionIndex);
+        List<Answer> shuffledAnswers = new ArrayList<>(currentQuestion.getAnswers());
+        Collections.shuffle(shuffledAnswers);
+
+        model.addAttribute("questionText", currentQuestion.getQuestionText());
+        model.addAttribute("answers", shuffledAnswers);
     }
 
 }
