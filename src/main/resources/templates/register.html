@@ -92,19 +92,57 @@
         }
     </style>
     <script>
+        function validateUsername() {
+            const username = document.getElementById("username");
+            const usernameRegex = /^[a-zA-Z0-9]{4,20}$/;
+            if (!usernameRegex.test(username.value)) {
+                if (username.value.length < 4 || username.value.length > 20) {
+                    username.setCustomValidity("Username must be between 4 and 20 characters");
+                } else {
+                    username.setCustomValidity("Username must contain only letters and numbers");
+                }
+            } else {
+                username.setCustomValidity('');
+            }
+        }
+
         function validatePassword() {
             const password = document.getElementById("password");
-            const confirm_password = document.getElementById("confirm_password");
-            if (password.value !== confirm_password.value) {
-                confirm_password.setCustomValidity("Passwords don't match.");
+            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+            if (!passwordRegex.test(password.value)) {
+                password.setCustomValidity("Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number");
             } else {
-                confirm_password.setCustomValidity('');
+                password.setCustomValidity('');
+            }
+
+            // Confirm password validation
+            validateConfirmPassword();
+        }
+
+        function validateConfirmPassword() {
+            const password = document.getElementById("password");
+            const confirmPassword = document.getElementById("confirm_password");
+            if (password.value !== confirmPassword.value) {
+                confirmPassword.setCustomValidity("Passwords don't match.");
+            } else {
+                confirmPassword.setCustomValidity('');
             }
         }
 
         window.onload = function () {
+            document.getElementById("username").onchange = validateUsername;
             document.getElementById("password").onchange = validatePassword;
-            document.getElementById("confirm_password").onkeyup = validatePassword;
+            document.getElementById("confirm_password").onkeyup = validateConfirmPassword;
+            const form = document.getElementsByTagName("form")[0];
+            form.onsubmit = function(event) {
+                validateUsername();
+                validatePassword();
+                validateConfirmPassword();
+                if (!this.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+            };
         }
     </script>
 </head>
@@ -114,15 +152,18 @@
     <p>Please fill in this form to create an account</p>
     <form th:action="@{/register}" th:object="${user}" method="post">
         <div class="input-group">
-            <label for="username"></label><input type="text" id="username" th:field="*{username}" placeholder="Username" required>
+            <label for="username"></label>
+            <input type="text" id="username" th:field="*{username}" placeholder="Username" required onchange="validateUsername()">
             <p th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="validation-error"></p>
         </div>
         <div class="input-group">
-            <label for="password"></label><input type="password" id="password" th:field="*{password}" placeholder="Password" required>
+            <label for="password"></label>
+            <input type="password" id="password" th:field="*{password}" placeholder="Password" required onchange="validatePassword()">
             <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="validation-error"></p>
         </div>
         <div class="input-group">
-            <label for="confirm_password"></label><input type="password" id="confirm_password" placeholder="Confirm Password" required onkeyup="validatePassword()">
+            <label for="confirm_password"></label>
+            <input type="password" id="confirm_password" placeholder="Confirm Password" required onkeyup="validateConfirmPassword()">
         </div>
         <button type="submit" class="button">Register</button>
         <p class="register">Already have an account? <a href="/login">Login here</a></p>
