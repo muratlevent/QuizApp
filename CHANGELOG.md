@@ -7,6 +7,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [2024-02-21]
+### Fixed
+- Code refactoring to improve the readability and maintainability of the codebase. Fixed minor ui bugs.
+
 ## [2024-02-14]
 ### Fixed
 - Fixed a bug where AJAX requests preventing the reset of the score and the game state.
