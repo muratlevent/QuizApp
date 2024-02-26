@@ -49,6 +49,7 @@ cd [project folder]
 - Create a MySQL database for the project.
 - Execute `questions_schema.sql` and `answers_schema.sql` to create the necessary tables.
 - Import `questions_data.sql` and `answers_data.sql` to populate the database with initial data.
+- Important: No not forget to create a user and score table in the database.
 - Optional: Use a database tool like DataGrip for easier database management.
 
 ### Configure Application Properties
@@ -75,35 +76,46 @@ After successfully building and running the application:
 ## Navigating the Application
 The application guides you through the quiz process automatically:
 1. **Start Page**: Begin your quiz journey here.
-2. **Category Selection**: Choose a category for your quiz.
-3. **Quiz Questions**: Answer questions from the chosen category.
-4. **Results Page**: View your quiz results at the end.
+2. **Login Page**: Enter your username to participate in the quiz.
+3. **Registration Page**: Create a new account to participate in the quiz.
+4. **Category Selection**: Choose a category for your quiz.
+5. **Quiz Questions**: Answer questions from the chosen category.
+6. **Results Page**: View your quiz results at the end.
+7. **Scoreboard**: See the top scores and compare your performance.
 
 ## How to Use
 
-Here's a quick walkthrough of quiz application:
+Here's a quick walkthrough of quiz application and scenarios you might encounter while using it:
 
 ### Starting the Quiz
-![StartingQuizAndLose](path/gif.gif)
-*Selecting a quiz category and starting the quiz.*
+![StartingQuizAndLose](media/start.gif)
+
+*Logging in, selecting a category and answering questions.*
 
 ### Win Condition
-![WinCondition](path/gif.gif)
+![WinCondition](media/win.gif)
+
 *Answering questions and winning.*
 
-### Timeout Condition
-![TimeoutCondition](path/gif.gif)
-*Timout screen.*
+### Lose Condition
+![LoseCondition](media/lose.gif)
 
+*Answering questions and losing.*
+
+### Timeout Condition
+![TimeoutCondition](media/timeout.gif)
+
+*Timout screen after not answering questions.*
 ### Scoreboard
-![Scoreboard](path/gif.gif)
-*Scoreboard screen.*
+![Scoreboard](media/score.gif)
+
+*Scoreboard screen based on the user's score.*
 
 ## Project Structure
-- **Model Classes**: `Question.java`, `Answer.java`.
-- **Repository Interfaces**: `QuestionRepository.java`, `AnswerRepository.java`.
-- **Service Classes**: `RandomQuestionService.java`.
-- **Controller Classes**: `QuestionController.java`.
+- **Model Classes**: `Question.java`, `Answer.java`, `User.java`, `Score.java`.
+- **Repository Interfaces**: `QuestionRepository.java`, `AnswerRepository.java`, `UserRepository.java`, `ScoreRepository.java`.
+- **Service Classes**: `RandomQuestionService.java`, `QuestionRetrievalService.java`, `ScoreService.java` etc.
+- **Controller Classes**: `QuestionController.java`, `RegistrationController.java`, `ScoreController.java` etc.
 - **HTML Templates**: Thymeleaf templates (`categories.html`, `questions.html`, etc.).
 - **Configuration Files**: `application.properties`, `pom.xml`.
 
