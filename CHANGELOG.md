@@ -8,6 +8,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [Unreleased]
 
 ## [2024-02-21]
+### Updated
+- Readme file updated with the latest information about the project.
+
+## [2024-02-21]
 ### Fixed
 - Code refactoring to improve the readability and maintainability of the codebase. Fixed minor ui bugs.
 
